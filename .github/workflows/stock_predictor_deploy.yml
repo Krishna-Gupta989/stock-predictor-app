@@ -1,0 +1,20 @@
+name: Sync to Hugging Face hub
+
+on:
+  push:
+    branches: [main]   # Jab bhi main branch push hoti hai
+
+  workflow_dispatch:    # Manually bhi run kar sakte ho
+
+jobs:
+  sync-to-hub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2  # Code pull kare repo se
+        with:
+          fetch-depth: 0
+
+      - name: Push to hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}  # Hugging Face token
+        run: git push https://KrishnaGupta989:$HF_TOKEN@huggingface.co/spaces/KrishnaGupta989/stock-predictor-app main
