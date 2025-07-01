@@ -17,4 +17,4 @@ jobs:
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}  # Hugging Face token
-        run: git push https://KrishnaGupta989:$HF_TOKEN@huggingface.co/spaces/KrishnaGupta989/stock-predictor-app main
+        run: git push --push https://KrishnaGupta989:$HF_TOKEN@huggingface.co/spaces/KrishnaGupta989/stock-predictor-app main
