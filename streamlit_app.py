@@ -23,6 +23,9 @@ df = pd.read_csv(uploaded_file)
 df['date'] = pd.to_datetime(df['date'], errors='coerce')
 df = df.dropna(subset=['date'])
 
+# 🧽 Clean symbol column (trim whitespaces)
+df['symbol'] = df['symbol'].astype(str).str.strip()
+
 # Standardize columns
 df.rename(columns={
     'open': 'OPEN', 'high': 'HIGH', 'low': 'LOW',
@@ -35,7 +38,7 @@ if not all(col in df.columns for col in required_cols):
     st.stop()
 
 symbols = df['symbol'].unique()
-selected = st.selectbox("📌 Select Company Symbol", symbols)
+selected = st.selectbox("📌 Select Company Symbol", sorted(symbols))
 
 # Filter selected company
 stock_df = df[df['symbol'] == selected].copy().sort_values('date')
@@ -103,7 +106,7 @@ ax.plot(Y_pred_inv, label='Predicted', color='red')
 ax.legend()
 st.pyplot(fig)
 
-# Metrics
+# Metrics (💥 FIXED: squared removed)
 r2 = r2_score(Y_test_inv, Y_pred_inv)
-rmse = mean_squared_error(Y_test_inv, Y_pred_inv, squared=False)
+rmse = np.sqrt(mean_squared_error(Y_test_inv, Y_pred_inv))
 st.success(f"📊 R² Score: {r2:.4f} | RMSE: {rmse:.2f}")
