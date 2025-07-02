@@ -2,19 +2,26 @@ name: Sync to Hugging Face hub
 
 on:
   push:
-    branches: [main]   # Jab bhi main branch push hoti hai
-
-  workflow_dispatch:    # Manually bhi run kar sakte ho
+    branches: [main]  # Trigger on push to main branch
+  workflow_dispatch:   # Also allow manual trigger
 
 jobs:
   sync-to-hub:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2  # Code pull kare repo se
+      - name: Checkout repo
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Push to hub
+      - name: Set up git user
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+
+      - name: Push to Hugging Face Hub
         env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}  # Hugging Face token
-        run: git push --push https://KrishnaGupta989:$HF_TOKEN@huggingface.co/spaces/KrishnaGupta989/stock-predictor-app main
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git remote add hf https://KrishnaGupta989:${HF_TOKEN}@huggingface.co/spaces/KrishnaGupta989/stock-predictor-app
+          git push hf main --force
