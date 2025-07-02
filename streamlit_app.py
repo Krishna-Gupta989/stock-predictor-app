@@ -80,6 +80,11 @@ X, Y = np.array(X), np.array(Y)
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, shuffle=False)
 
+# ✅ Check for empty training data
+if len(X_train) == 0 or len(Y_train) == 0:
+    st.warning("⚠️ Not enough data after scaling/sequencing. Try another company.")
+    st.stop()
+
 # Build model
 model = Sequential([
     GRU(64, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])),
@@ -106,7 +111,7 @@ ax.plot(Y_pred_inv, label='Predicted', color='red')
 ax.legend()
 st.pyplot(fig)
 
-# Metrics (💥 FIXED: squared removed)
+# Metrics
 r2 = r2_score(Y_test_inv, Y_pred_inv)
 rmse = np.sqrt(mean_squared_error(Y_test_inv, Y_pred_inv))
 st.success(f"📊 R² Score: {r2:.4f} | RMSE: {rmse:.2f}")
