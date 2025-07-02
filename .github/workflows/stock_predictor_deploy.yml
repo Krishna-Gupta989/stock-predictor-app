@@ -2,8 +2,8 @@ name: Sync to Hugging Face hub
 
 on:
   push:
-    branches: [main]  # Trigger on push to main branch
-  workflow_dispatch:   # Also allow manual trigger
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   sync-to-hub:
@@ -16,12 +16,16 @@ jobs:
 
       - name: Set up git user
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
+          git config --global user.email "krishnaguptakrishnbly@gmail.com"
+          git config --global user.name "Krishna-Gupta989"
+
+      - name: Remove deleted large files from history
+        run: |
+          git filter-branch --force --index-filter "git rm --cached --ignore-unmatch prices.zip" --prune-empty --tag-name-filter cat -- --all
 
       - name: Push to Hugging Face Hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git remote add hf https://KrishnaGupta989:${HF_TOKEN}@huggingface.co/spaces/KrishnaGupta989/stock-predictor-app
+          git remote add hf https://KrishnaGupta989:${HF_TOKEN}@huggingface.co/spaces/KrishnaGupta989/stock-predictor-app || echo "remote exists"
           git push hf main --force
